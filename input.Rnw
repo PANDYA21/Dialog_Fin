@@ -1,0 +1,24 @@
+\documentclass{article}
+
+\begin{document}
+
+User profile:
+
+<<names, eval=TRUE, echo=FALSE>>=
+Username
+usr.df
+@
+
+
+Suggested rackets for you:
+
+<<res, results=tex, echo=FALSE>>=
+library(xtable)
+print(xtable(DF2[s2,]), include.rownames=FALSE, floating=FALSE)
+@
+
+<<res2, eval=TRUE, echo=FALSE>>=
+print(gg3)
+@
+
+\end{document}

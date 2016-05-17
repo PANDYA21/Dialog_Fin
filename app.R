@@ -1,11 +1,15 @@
 # Sys.setlocale(, "en_us")
+library(shiny)
 library(shinydashboard)
 library(grDevices)
+library(knitr)
 source("app_ui.R")
 source("gui_dashboard.R")
 options(bitmapType='cairo')
 
-Logged = FALSE;
+Logged <<- FALSE
+tex <<- "tex"
+
 # my_username <- c("test", "admin", "root")
 # my_password <- c("test", "admin", "root")
 
@@ -81,7 +85,7 @@ ui = dashboardPage(myHeader,
 
 server = (function(input, output,session) {
   
-  USER <- reactiveValues(Logged = Logged)
+  USER <<- reactiveValues(Logged = Logged)
   
   observe({ 
     if (USER$Logged == FALSE) {
@@ -521,6 +525,21 @@ server = (function(input, output,session) {
     # }, deleteFile = FALSE)
     
   }, deleteFile = FALSE)
+  
+  
+  # the report
+  output$report <- downloadHandler(
+    filename = paste0("HEAD_racket_recommendation_", Username, ".pdf"),
+    
+    content = function(file) {
+      # Logged <<- TRUE
+      Sweave2knitr('input.Rnw')
+      out = knit2pdf('input-knitr.Rnw', clean = TRUE)
+      file.rename(out, file) # move pdf to file for downloading
+    },
+    
+    contentType = 'application/pdf'
+  )
   #### the app finished
 })
 

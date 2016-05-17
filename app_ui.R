@@ -21,6 +21,11 @@ bodyRoot <- dashboardBody(
                             # tags$style(type="plot/css", "#plt { height: 50px; width: 8%; text-align:right; font-size: 30px; display: block;}")
                      )
                    )),
+  conditionalPanel("input.do3 % 3 == 2",
+                   fluidRow(
+                     column(12, align="center", offset = 0,
+                            downloadButton(outputId = "report", label = "Recommendation Report"))
+                   )),
   fluidRow(
     column(width = 12, offset = 0, align="center", 
            actionButton("do3", ">> Next >>", width = "auto"))
