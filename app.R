@@ -1,4 +1,4 @@
-Sys.setlocale(, "en_us")
+# Sys.setlocale(, "en_us")
 library(shinydashboard)
 library(grDevices)
 source("app_ui.R")
@@ -6,8 +6,14 @@ source("gui_dashboard.R")
 options(bitmapType='cairo')
 
 Logged = FALSE;
-my_username <- c("test", "admin", "root")
-my_password <- c("test", "admin", "root")
+# my_username <- c("test", "admin", "root")
+# my_password <- c("test", "admin", "root")
+
+# read the user names and password .csv file
+credentials <- read.csv(file = "users.csv", stringsAsFactors = F)
+my_username <- tolower(credentials$username)
+my_password <- credentials$password
+
 
 ui1 <- function(){
   tagList(
@@ -81,8 +87,8 @@ server = (function(input, output,session) {
     if (USER$Logged == FALSE) {
       if (!is.null(input$Login)) {
         if (input$Login > 0) {
-          Username <- isolate(input$userName)
-          Password <- isolate(input$passwd)
+          Username <<- isolate(tolower(input$userName))
+          Password <<- isolate(input$passwd)
           if(Username %in% my_username){
             uid <- which(my_username == Username)
             if(Password == my_password[uid]){
@@ -292,6 +298,7 @@ server = (function(input, output,session) {
   })
   
   output$match <- DT::renderDataTable({
+    
     df1 <<- head(getFinDf(In.age = input$inText2,
                           In.sex = input$inText1,
                           In.weight = input$inText7,
@@ -340,6 +347,40 @@ server = (function(input, output,session) {
       s2 <<- s1
     }
     
+    ### save the user profile
+    # info from the sessionData
+    cdata <<- session$clientData
+    usr.tkn <<- session$token
+    #
+    usr.df <<- data.frame(time_stamp = Sys.time(),
+                          Usr = Username,
+                          In.age = input$inText2,
+                          In.sex = input$inText1,
+                          In.weight = input$inText7,
+                          In.lev = input$inText3,
+                          In.ptype = input$inText4,
+                          In.err = input$inText6,
+                          In.head = input$inText8,
+                          In.stroke = input$inText5,
+                          usr.token = usr.tkn,
+                          sel.sugg = paste(s2, collapse = ","))
+    
+    # create "user_profiles" named directory if doesn't exist already
+    if(!dir.exists("user_profiles")){
+      dir.create("user_profiles")
+    }
+    # create the user specific .csv file to store records
+    oldwd <<- getwd()
+    setwd("user_profiles")
+    usr.file <- paste0(Username, ".csv")
+    if(!file.exists(usr.file)){
+      write.table(usr.df, file = usr.file, append = F, row.names = F, sep = ",", dec = ".")
+      setwd("..")
+    } else {
+      write.table(usr.df, file = usr.file, append = T, col.names = F, row.names = F, sep = ",", dec = ".")
+      setwd("..")
+    }
+    ###
     
     #### sort norm.head and the others by rank of match
     norm.head <- norm.head[order(mean.match, decreasing = T)]
