@@ -1,0 +1,52 @@
+---
+# title: "Racket Recommendation by HEAD"
+output:
+  html_document
+---
+
+<h1 style="background:black;color:white;text-align:center"> <a href="http://www.head.com/de/home"> <img src="http://www.head.com/fileadmin/templates/images/logo.png" height="25" width="100"/> </a> </h1>
+
+
+
+## Racket Recommendation
+<!-- ```{r setup, include=FALSE, warning=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = FALSE) -->
+<!-- ``` -->
+
+<!-- ## User profile -->
+<!-- User:  -->
+<!-- the df column name is the section heading -->
+```{r, eval=TRUE, echo=FALSE, results='markup'}
+# print(xtable(data.frame(Username)), include.rownames=FALSE, floating=FALSE, type = "html")
+kable(data.frame("User" = Username), row.names = F)
+```
+
+
+## Profile
+```{r, eval=TRUE, echo=FALSE, warning=FALSE, results='asis'}
+# library(xtable)
+# print(xtable(usr.df), include.rownames=FALSE, floating=FALSE, type = "html")
+if(all(usr.df[,c(3:10)] == "")){
+  print("No data was input. Default profile generated.")
+} else if(tolower(usr.df$In.lev) == "beginner") {
+  # print(xtable(data.frame((usr.df[,c(2,3,4,6)]))), include.rownames=TRUE, floating=FALSE, type = "html")
+  kable(data.frame((usr.df[,c(2,3,4,6)])))
+} else {
+  # print(xtable(data.frame((usr.df[,c(2:10)]))), include.rownames=TRUE, floating=FALSE, type = "html")
+  kable(usr.df[,c(2:10)])
+}
+```
+
+## Suggestions for you
+Suggested rackets based on your profile:
+```{r, echo=FALSE, warning=FALSE, results='asis'}
+# library(xtable)
+# print(xtable(DF2[s2,]), include.rownames=FALSE, floating=FALSE, type = "html")
+kable(DF2[s2,])
+# DF2[s2,]
+```
+
+## Trade-off
+```{r, echo=FALSE, warning=FALSE, fig.height=hgt2, fig.width=wid2}
+print(gg3)
+```

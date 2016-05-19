@@ -1,24 +1,20 @@
-\documentclass{article}
-
-\begin{document}
+Racket Recommendation by HEAD
 
 User profile:
-
 <<names, eval=TRUE, echo=FALSE>>=
 Username
-usr.df
+library(xtable)
+print(xtable(usr.df), include.rownames=FALSE, floating=FALSE, type = "html")
 @
 
 
 Suggested rackets for you:
-
 <<res, results='asis', echo=FALSE>>=
 library(xtable)
-print(xtable(DF2[s2,]), include.rownames=FALSE, floating=FALSE)
+print(xtable(DF2[s2,]), include.rownames=FALSE, floating=FALSE, type = "html")
 @
 
 <<res2, eval=TRUE, echo=FALSE>>=
 print(gg3)
 @
 
-\end{document}

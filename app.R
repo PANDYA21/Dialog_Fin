@@ -494,6 +494,9 @@ server = (function(input, output,session) {
       wid <<- session$clientData$output_plt_width
       hgt <<- session$clientData$output_plt_width/1.4
       
+      wid2 <<- wid/100
+      hgt2 <<- hgt/1.5/100
+      
       # filename_png <- tempfile(fileext='.png')
       # ggsave(filename=filename_png, height = hgt/100, width = wid/100, gg3)
       
@@ -529,16 +532,18 @@ server = (function(input, output,session) {
   
   # the report
   output$report <- downloadHandler(
-    filename = paste0("HEAD_racket_recommendation_", Username, ".pdf"),
+    # filename = paste0("HEAD_racket_recommendation_", Username, ".pdf"),
+    filename = paste0("HEAD_racket_recommendation_", Username, ".htm"),
     
     content = function(file) {
       # Logged <<- TRUE
-      Sweave2knitr('input.Rnw')
-      out = knit2pdf('input-knitr.Rnw', clean = TRUE)
+      # Sweave2knitr('input.Rnw')
+      # out = knit2pdf('input-knitr.Rnw', clean = TRUE)
+      out = rmarkdown::render(input = 'input.Rmd', output_format = "html_document")
       file.rename(out, file) # move pdf to file for downloading
-    },
+    }# ,
     
-    contentType = 'application/pdf'
+    # contentType = 'application/pdf'
   )
   #### the app finished
 })
